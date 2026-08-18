@@ -1,4 +1,4 @@
-local Base = "https://raw.githubusercontent.com/sawedoffbilly/saiseiclient/refs/heads/main"
+local Base = "https://raw.githubusercontent.com/sawedoffbilly/saiseiclient/refs/heads/main/"
 
 local function HttpRequire(Folder)
     local FileURL = Base .. Folder
