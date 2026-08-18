@@ -7,6 +7,6 @@ local function HttpRequire(Folder)
     return loadstring(FileContent)()
 end
 
-local InterfaceData = require_github("Data/Interface.lua")
+local InterfaceData = HttpRequire("Data/Interface.lua")
 
 print(InterfaceData.AccentColor)
