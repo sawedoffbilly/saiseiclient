@@ -8,5 +8,6 @@ local function HttpRequire(Folder)
 end
 
 local InterfaceData = HttpRequire("Data/Interface.lua")
+local InterfaceUtils = HttpRequire("Utils/Interface.lua")
 
-print(InterfaceData.AccentColor)
+InterfaceUtils.Init()
