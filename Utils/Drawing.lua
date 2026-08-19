@@ -10,7 +10,7 @@ return {
 
 		return Text
 	end,
-	
+
 	DrawLine = function(Thickness: number, Color: Color3)
 		local Line = Drawing.new("Line")
 		Line.Visible = false
@@ -20,7 +20,7 @@ return {
 
 		return Line
 	end,
-	
+
 	DrawQuad = function(Thickness: number, Color: Color3)
 		local Quad = Drawing.new("Quad")
 		Quad.Visible = false
