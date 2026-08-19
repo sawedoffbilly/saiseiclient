@@ -42,22 +42,22 @@ Functions.CreateESP = function(Player: Player, Settings)
 
 		Distance = DrawingUtils.DrawText(13, Color3.fromRGB(255, 255, 255)),
 		Username = DrawingUtils.DrawText(13, Color3.fromRGB(255, 255, 255)),
-		
+
 		Settings = Settings,
 	}
 end
 
 Functions.RemoveESP = function(Player: Player)
 	local Library = ESP[Player]
-	
+
 	if not Library then
 		return
 	end
-	
+
 	for _, v in pairs(Library) do
 		v:Remove()
 	end
-	
+
 	ESP[Player] = nil
 end
 
@@ -91,13 +91,13 @@ local Connection = nil
 Functions.Start = function()
 	Connection = RunService.RenderStepped:Connect(function()
 		local LocalCharacter = LocalPlayer.Character
-		local LocalHumanoidRootPart = LocalCharacter:FindFirstChild("HumanoidRootPart")
+		local LocalHumanoidRootPart = LocalCharacter and LocalCharacter:FindFirstChild("HumanoidRootPart")
 
 		if not LocalHumanoidRootPart then
 			return
 		end
 
-		for Player: Player, Library in pairs(ESP) do
+		for Player, Library in pairs(ESP) do
 			local Character = Player.Character
 
 			if not Character then
@@ -139,10 +139,10 @@ Functions.Start = function()
 			Library.Black.PointD = Library.Box.PointD
 
 			if Library.Settings.Tracers then
-				local HumanoidRootPart = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+				local LocalRoot = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
 
-				if (HumanoidRootPart) then
-					local ScreenPosition = workspace.CurrentCamera:WorldToViewportPoint(HumanoidRootPart.Position)
+				if LocalRoot then
+					local ScreenPosition = workspace.CurrentCamera:WorldToViewportPoint(LocalRoot.Position)
 					local ClientPosition = Vector2.new(ScreenPosition.X, ScreenPosition.Y)
 
 					Library.Tracer.From = ClientPosition
@@ -158,8 +158,8 @@ Functions.Start = function()
 
 			Library.HealthSlider.From = Vector2.new(HumanoidPosition.X - DistanceY - 4, HumanoidPosition.Y + DistanceY * 2)
 			Library.HealthSlider.To = Vector2.new(HumanoidPosition.X - DistanceY - 4, HumanoidPosition.Y + DistanceY * 2 - HealthOffset)
-			Library.healthbar.From = Vector2.new(HumanoidPosition.X - DistanceY - 4, HumanoidPosition.Y + DistanceY * 2)
-			Library.healthbar.To = Vector2.new(HumanoidPosition.X - DistanceY - 4, HumanoidPosition.Y - DistanceY * 2)
+			Library.HealthBar.From = Vector2.new(HumanoidPosition.X - DistanceY - 4, HumanoidPosition.Y + DistanceY * 2)
+			Library.HealthBar.To = Vector2.new(HumanoidPosition.X - DistanceY - 4, HumanoidPosition.Y - DistanceY * 2)
 			Library.HealthSlider.Color = Library.Settings.HealthEndColor:Lerp(Library.Settings.HealthStartColor, HealthPercent)
 
 			if Library.Settings.StaminaBar then
@@ -205,7 +205,7 @@ Functions.Start = function()
 
 				Library.Distance.Text = Distance .. " Studs"
 				Library.Distance.Position = Vector2.new(HumanoidPosition.X, HumanoidPosition.Y - DistanceY * 2 - 16)
-				Library.Distance.Visible = HumanoidPosition
+				Library.Distance.Visible = true
 			else
 				Library.Distance.Visible = false
 			end
