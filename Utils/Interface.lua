@@ -36,9 +36,9 @@ Utils.Init = function()
 	local Library = loadstring(game:HttpGet(Repository .. 'Library.lua'))()
 	local ThemeManager = loadstring(game:HttpGet(Repository .. 'addons/ThemeManager.lua'))()
 	local SaveManager = loadstring(game:HttpGet(Repository .. 'addons/SaveManager.lua'))()
-	
+
 	local ESP = HttpRequire("Libs/ESP.lua")
-	
+
 	local Connections = {}
 
 	local Window = Library:CreateWindow({
@@ -57,7 +57,7 @@ Utils.Init = function()
 
 	local CombatGroupBox = Tabs.Saisei:AddLeftGroupbox('Combat')
 	local MenuGroupBox = Tabs.Settings:AddLeftGroupbox('Menu')
-	
+
 	CombatGroupBox:AddToggle('AutoParry', {
 		Text = 'AutoParry',
 		Default = false, 
@@ -67,7 +67,7 @@ Utils.Init = function()
 			print('[cb] MyToggle changed to:', Value)
 		end
 	})
-	
+
 	CombatGroupBox:AddToggle('ESP', {
 		Text = 'ESP',
 		Default = false, 
@@ -76,14 +76,16 @@ Utils.Init = function()
 		Callback = function(Value)
 			if Value == true then
 				ESP.Start()
-				
+
 				for _, Player in pairs(Players:GetPlayers()) do
 					if Player ~= nil and Player.Parent ~= nil and Player ~= LocalPlayer then
 						ESP.CreateESP(Player, ESPSettings)
 					end
 				end
-				
-				Connections["ESP_PlayerAdded"] = Players.PlayerAdded:Connect(ESP.CreateESP)
+
+				Connections["ESP_PlayerAdded"] = Players.PlayerAdded:Connect(function(Player)
+					ESP.CreateESP(Player, ESPSettings)
+				end)
 				Connections["ESP_PlayerRemoving"] = Players.PlayerRemoving:Connect(ESP.RemoveESP)
 			else
 				for _, Player in pairs(Players:GetPlayers()) do
@@ -91,17 +93,17 @@ Utils.Init = function()
 						ESP.RemoveESP(Player)
 					end
 				end
-				
+
 				if Connections["ESP_PlayerAdded"] then
 					Connections["ESP_PlayerAdded"]:Disconnect()
 					Connections["ESP_PlayerAdded"] = nil
 				end
-				
+
 				if Connections["ESP_PlayerRemoving"] then
 					Connections["ESP_PlayerRemoving"]:Disconnect()
 					Connections["ESP_PlayerRemoving"] = nil
 				end
-				
+
 				ESP.Stop()
 			end
 		end
@@ -116,7 +118,7 @@ Utils.Init = function()
 			print('[cb] MyToggle changed to:', Value)
 		end
 	})
-	
+
 	CombatGroupBox:AddSlider('AutoParryDelay', {
 		Text = 'AutoParry Delay',
 		Default = 0.5,
@@ -130,7 +132,7 @@ Utils.Init = function()
 			print('[cb] AutoDodge Delay was changed! New value:', Value)
 		end
 	})
-	
+
 	CombatGroupBox:AddSlider('AutoDodgeDelay', {
 		Text = 'AutoDodge Delay',
 		Default = 0.25,
@@ -144,11 +146,11 @@ Utils.Init = function()
 			print('[cb] AutoDodge Delay was changed! New value:', Value)
 		end
 	})
-	
+
 	Toggles.AutoParry:OnChanged(function()
 		print('AutoParry changed to:', Toggles.AutoParry.Value)
 	end)
-	
+
 	Toggles.AutoDodge:OnChanged(function()
 		print('AutoDodge changed to:', Toggles.AutoDodge.Value)
 	end)
@@ -161,14 +163,12 @@ Utils.Init = function()
 	MenuGroupBox:AddButton('Unload', function()
 		Library:Unload()
 	end)
-	
+
 	ThemeManager:SetLibrary(Library)
-	
+
 	SaveManager:IgnoreThemeSettings()
 	ThemeManager:ApplyToTab(Tabs.Settings)
 	SaveManager:LoadAutoloadConfig()
 end
-
-
 
 return Utils
